@@ -1,1 +1,57 @@
 #!/bin/bash -e
+
+declare VBOXSH=$(readlink -m $(type -p "${0}"))
+declare -a VBOXSH_CMDS_LIST=()
+
+VBOXSH_CMDS_LIST+=(help)
+
+declare VBOXSH_CMDS="${VBOXSH_CMDS_LIST[@]}"
+
+##############################################################################
+
+load-library () {
+    if test "$1" = --dump; then
+        declare -f $VBOXSH_CMDS
+        declare -f fail
+        echo VBOXSH=\""$VBOXSH"\"
+        echo VBOXSH_CMDS=\""$VBOXSH_CMDS"\"
+    else
+        export -f $VBOXSH_CMDS
+        export -f fail
+        export VBOXSH VBOXSH_CMDS
+    fi
+}
+
+##############################################################################
+
+# Usage: help [<command>]
+# display available commands or show help for a command
+help () {
+    local cmd
+
+    if test $# -eq 0; then
+        echo "help <command>"
+        echo "where command is one of:"
+        echo
+        # TODO: verify this [@] is needed
+        for cmd in ${VBOXSH_CMDS[@]}; do
+            echo $cmd
+        done | column
+    else
+        grep -B2 ^"$1"\\b < "$VBOXSH" | head -n2 | cut -f2- -d" "
+    fi
+}
+
+fail () {
+    echo "$1" >&2
+    return ${2:-1}
+}
+
+##############################################################################
+
+if test "$1" == --lib; then
+    load-library --dump
+else
+    load-library --export
+    PS1='\[\033[01;31m\]VBox\[\033[00m\]$ ' bash --noprofile --norc
+fi
