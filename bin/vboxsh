@@ -26,9 +26,9 @@ declare VBOXSH=$(readlink -m $(type -p "${0}"))
 declare -a VBOXSH_CMDS_LIST=()
 
 VBOXSH_CMDS_LIST+=(help)
-VBOXSH_CMDS_LIST+=(start stop)
-VBOXSH_CMDS_LIST+=(show)
-VBOXSH_CMDS_LIST+=(poweroff)
+VBOXSH_CMDS_LIST+=(vm-start vm-stop)
+VBOXSH_CMDS_LIST+=(vm-show)
+VBOXSH_CMDS_LIST+=(vm-poweroff)
 
 declare VBOXSH_CMDS="${VBOXSH_CMDS_LIST[@]}"
 
@@ -74,27 +74,27 @@ fail () {
 
 ##############################################################################
 
-# Usage: poweroff <vm>
+# Usage: vm-poweroff <vm>
 # power off a VM by its name or GUID
-poweroff () {
+vm-poweroff () {
     VBoxManage controlvm "$1" poweroff
 }
 
-# Usage: show <vm>
+# Usage: vm-show <vm>
 # display info about a VM by its name or GUID
-show () {
+vm-show () {
     VBoxManage showvminfo "$1"
 }
 
-# Usage: start <vm>
+# Usage: vm-start <vm>
 # start a VM by its name or GUID
-start () {
+vm-start () {
     VBoxManage startvm "$1"
 }
 
-# Usage: stop <vm>
-# alias for poweroff
-stop () {
+# Usage: vm-stop <vm>
+# alias for vm-poweroff
+vm-stop () {
     poweroff "$1"
 }
 
