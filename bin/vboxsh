@@ -29,6 +29,8 @@ VBOXSH_CMDS_LIST+=(help)
 VBOXSH_CMDS_LIST+=(vm-control)
 VBOXSH_CMDS_LIST+=(vm-control-poweroff vm-control-reboot vm-control-shutdown)
 VBOXSH_CMDS_LIST+=(vm-create)
+VBOXSH_CMDS_LIST+=(vm-modify)
+VBOXSH_CMDS_LIST+=(vm-modify-firmware vm-modify-usb-ehci vm-modify-usb-ohci)
 VBOXSH_CMDS_LIST+=(vm-show)
 VBOXSH_CMDS_LIST+=(vm-start vm-stop)
 
@@ -122,6 +124,30 @@ vm-control-shutdown () {
     fi
 
     VBoxManage controlvm "$1" shutdown $opts
+}
+
+# Usage: vm-modify <vm> <vbox-opts>
+# modify a VM by its name or GUID, passing VBoxManage options to modifyvm
+vm-modify () {
+    VBoxManage modifyvm "$1" "${@:2}"
+}
+
+# Usage: vm-modify-firmware <vm> {bios|efi|efi32|efi64}
+# modify a VM by its name or GUID, setting the firmware type
+vm-modify-firmware () {
+    VBoxManage modifyvm "$1" --firmware "$2"
+}
+
+# Usage: vm-modify-usb-ehci <vm> {on|off}
+# modify a VM by its name or GUID, turning USB EHCI on or off
+vm-modify-usb-ehci () {
+    VBoxManage modifyvm "$1" --usb-ehci "$2"
+}
+
+# Usage: vm-modify-usb-ohci <vm> {on|off}
+# modify a VM by its name or GUID, turning USB OHCI on or off
+vm-modify-usb-ohci () {
+    VBoxManage modifyvm "$1" --usb-ohci "$2"
 }
 
 # Usage: vm-show <vm>
