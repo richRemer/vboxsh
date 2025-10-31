@@ -28,6 +28,7 @@ declare -a VBOXSH_CMDS_LIST=()
 VBOXSH_CMDS_LIST+=(help)
 VBOXSH_CMDS_LIST+=(vm-control)
 VBOXSH_CMDS_LIST+=(vm-control-poweroff vm-control-reboot vm-control-shutdown)
+VBOXSH_CMDS_LIST+=(vm-create)
 VBOXSH_CMDS_LIST+=(vm-show)
 VBOXSH_CMDS_LIST+=(vm-start vm-stop)
 
@@ -75,6 +76,19 @@ fail () {
 
 ##############################################################################
 
+# Usage: vm-create [-r] <name>
+# create and optionally register a VM
+vm-create () {
+    local opts=
+
+    if test "$1" = -r; then
+        opts="$opts --register"
+        shift
+    fi
+
+    VBoxManage createvm --name "$1" $opts
+}
+
 # Usage: vm-control <vm> <cmd> [<options>]
 # issue a control cmd to a VM by its name or GUID and the cmd name
 vm-control () {
@@ -107,7 +121,7 @@ vm-control-shutdown () {
         shift
     fi
 
-    VBoxManage controlvm "$1" shutdown $force
+    VBoxManage controlvm "$1" shutdown $opts
 }
 
 # Usage: vm-show <vm>
