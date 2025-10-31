@@ -27,6 +27,7 @@ declare -a VBOXSH_CMDS_LIST=()
 
 VBOXSH_CMDS_LIST+=(help)
 VBOXSH_CMDS_LIST+=(start stop)
+VBOXSH_CMDS_LIST+=(show)
 VBOXSH_CMDS_LIST+=(poweroff)
 
 declare VBOXSH_CMDS="${VBOXSH_CMDS_LIST[@]}"
@@ -79,6 +80,12 @@ poweroff () {
     VBoxManage controlvm "$1" poweroff
 }
 
+# Usage: show <vm>
+# display info about a VM by its name or GUID
+show () {
+    VBoxManage showvminfo "$1"
+}
+
 # Usage: start <vm>
 # start a VM by its name or GUID
 start () {
@@ -86,7 +93,7 @@ start () {
 }
 
 # Usage: stop <vm>
-# stop a VM by its name or GUID; alias for poweroff
+# alias for poweroff
 stop () {
     poweroff "$1"
 }
