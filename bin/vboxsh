@@ -26,9 +26,9 @@ declare VBOXSH=$(readlink -m $(type -p "${0}"))
 declare -a VBOXSH_CMDS_LIST=()
 
 VBOXSH_CMDS_LIST+=(help)
-VBOXSH_CMDS_LIST+=(vm-start vm-stop)
+VBOXSH_CMDS_LIST+=(vm-control vm-control-poweroff)
 VBOXSH_CMDS_LIST+=(vm-show)
-VBOXSH_CMDS_LIST+=(vm-poweroff)
+VBOXSH_CMDS_LIST+=(vm-start vm-stop)
 
 declare VBOXSH_CMDS="${VBOXSH_CMDS_LIST[@]}"
 
@@ -74,9 +74,19 @@ fail () {
 
 ##############################################################################
 
-# Usage: vm-poweroff <vm>
+# Usage: vm-control <vm> <cmd> [<options>]
+# issue a control cmd to a VM by its name or GUID and the cmd name
+vm-control () {
+    local vm="$1"
+    local fn=vm-control-"$2"
+    shift 2
+
+    "$fn" "$vm" "$@"
+}
+
+# Usage: vm-control-poweroff <vm>
 # power off a VM by its name or GUID
-vm-poweroff () {
+vm-control-poweroff () {
     VBoxManage controlvm "$1" poweroff
 }
 
