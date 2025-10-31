@@ -33,6 +33,7 @@ VBOXSH_CMDS_LIST+=(vm-modify)
 VBOXSH_CMDS_LIST+=(vm-modify-firmware vm-modify-usb-ehci vm-modify-usb-ohci)
 VBOXSH_CMDS_LIST+=(vm-show)
 VBOXSH_CMDS_LIST+=(vm-start vm-stop)
+VBOXSH_CMDS_LIST+=(vm-storage-add-ide)
 
 declare VBOXSH_CMDS="${VBOXSH_CMDS_LIST[@]}"
 
@@ -78,7 +79,7 @@ fail () {
 
 ##############################################################################
 
-# Usage: vm-create [-r] <name>
+# Usage: vm-create [-r] <os> <name>
 # create and optionally register a VM
 vm-create () {
     local opts=
@@ -88,7 +89,7 @@ vm-create () {
         shift
     fi
 
-    VBoxManage createvm --name "$1" $opts
+    VBoxManage createvm --name "$2" --ostype "$1" $opts
 }
 
 # Usage: vm-control <vm> <cmd> [<options>]
@@ -166,6 +167,12 @@ vm-start () {
 # alias for vm-poweroff
 vm-stop () {
     poweroff "$1"
+}
+
+# Usage: vm-storage-add-ide <vm> <ctl-name>
+# add storage controller to VM by its name or GUID
+vm-storage-add-ide () {
+    VBoxManage storagectl "$1" --name "$2" --add ide
 }
 
 ##############################################################################
